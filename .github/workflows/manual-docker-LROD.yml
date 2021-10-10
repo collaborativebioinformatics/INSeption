@@ -17,6 +17,6 @@ jobs:
         image: dmolik/lrod
         tags: v1, latest
         registry: docker.io
-        dockerfile: workflow/Dockerfile.luojunwei.LROD
+        dockerfile: .resources/Dockerfile.luojunwei.LROD
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
