@@ -1,0 +1,22 @@
+name: LROD Manual Docker Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      name: Check out code
+
+    - uses: mr-smithers-excellent/docker-build-push@v5
+      name: Build & push Docker image
+      with:
+        image: dmolik/lrod
+        tags: v1, latest
+        registry: docker.io
+        dockerfile: workflow/Dockerfile.luojunwei.LROD
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
