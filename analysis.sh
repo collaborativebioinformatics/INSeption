@@ -37,4 +37,13 @@ ulimit -s unlimited
 ./CARNAC-LR -f input_carnac.txt -o output_file -t 7
 ./scripts/CARNAC_to_fasta HG002.GRCh37.unmapped.fastq output_file 2
 
+"""
+Running assembly using flye flye/2.8.1
+"""
+flye --pacbio-hifi HG002.GRCh37.unmapped.fastq.gz  --out-dir assembly --threads 32
+
+"""
+Running assembly using SPAdes/3.14.0
+"""
+spades.py -o spades_assembly  -s ../../HG002.GRCh37.unmapped.fastq.gz  --only-assembler
 
