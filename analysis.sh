@@ -15,3 +15,10 @@ Extract RE and SVTYPE, make plots for RE (task 2), SV type (task 4) and INS-RE (
 """
 bcftools query -f "%INFO/RE\t%INFO/SVTYPE\n" HG002.HiFi.GRCh37.SVLEN50.RE10.vcf > HG002.Hifi.GRCh37.table_RE_SVTYPE.tsv
 Rscript scripts/make_plots_RE_and_SVTYPE.R -i HG002.Hifi.GRCh37.table_RE_SVTYPE.tsv -p plots/RE_dist_task2.pdf -q plots/SV_type_task4.pdf -r plots/INS_RE_dist_task5.pdf
+
+"""
+Extract RE of long INS, make plots for RE (task 7)
+"""
+bcftool query -f "%INFO/RE\n" HG002.HiFi.GRCh37.SVLEN50.RE10.largeINS.vcf > HG002.Hifi.GRCh37.table_RE_largeINS.tsv
+Rscript scripts/make_plot_RE_dist.R -i ../HG002.Hifi.GRCh37.table_RE_largeINS.tsv -o plots/longIns_RE.pdf
+
