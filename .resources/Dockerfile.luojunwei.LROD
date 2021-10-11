@@ -24,6 +24,6 @@ RUN git clone --recursive https://github.com/GATB/dsk.git \
 RUN git clone --recursive https://github.com/luojunwei/LROD.git \
    && cd LROD \
    && make install \
-   && ln -s LORD /ussr/local/bin \
+   && ln -s LROD /ussr/local/bin \
    && cd ..
 
