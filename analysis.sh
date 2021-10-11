@@ -28,3 +28,13 @@ Make a plot showing the number of reads belonging to a cluster, as obtained by C
 awk '{print NF}' outputfile > n_fields.txt
 script scripts/clustering_stats.R -i n_fields.txt -o plots/carnac_cluster_stats.pdf
 
+"""
+Clustering unmapped reads with CARNAC-LR
+"""
+minimap2 HG002.GRCh37.unmapped.fastq HG002.GRCh37.unmapped.fastq -X > minimap_output.paf
+python3 CARNAC-LR/scripts/paf_to_CARNAC.py minimap_output.paf HG002.GRCh37.unmapped.fastq input_carnac.txt
+ulimit -s unlimited
+./CARNAC-LR -f input_carnac.txt -o output_file -t 7
+./scripts/CARNAC_to_fasta HG002.GRCh37.unmapped.fastq output_file 2
+
+
