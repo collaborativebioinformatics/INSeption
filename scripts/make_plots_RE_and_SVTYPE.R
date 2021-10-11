@@ -1,5 +1,7 @@
-# Plot RE (Task #2)
+# Whoeps, 11th Oct 2021
+# Plot RE (Task #2), SVTYPE distribution (Task #4) and INS-RE distribution (Task #5)
 
+##### A) LOAD PACKAGES AND SET PARAMETERS ########
 library(ggplot2)
 library(dplyr)
 library(optparse)
@@ -11,7 +13,7 @@ params$plotheight = 4
 params$plotunit = 'in'
 params$debug = F
 
-# Optparse to get user input ---------------------------------------------------------------
+##### B) DIGEST USER INPUT WITH OPTPARSE#######
 if (!params$debug){
 option_list <- list(
   make_option(c("-i", "--input_file"), type = "character", default = NULL,
@@ -38,6 +40,8 @@ outplot3_link  = opt$output_plot3
   output_plot3 = "../plots/fooplot3.pdf"
   
 }
+
+###### C) RUN CODE AND MAKE PLOTS ###############
 
 # Load files
 RElist = read.table(infile_link)
@@ -69,6 +73,7 @@ p3 = ggplot(RElist[RElist$SVTYPE=='INS',]) +
   scale_x_log10() + 
   theme_bw() + 
   labs(x='Reads supporting Insertions', y='#INS', title = 'Reads supporting INS')
+
 
 # Save everything
 ggsave(p1, file=outplot1_link, device='pdf', width = params$plotwidth, 
