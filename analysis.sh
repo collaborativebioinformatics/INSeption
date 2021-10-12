@@ -36,7 +36,8 @@ minimap2 HG002.GRCh37.unmapped.fastq HG002.GRCh37.unmapped.fastq -X > minimap_ou
 python3 CARNAC-LR/scripts/paf_to_CARNAC.py minimap_output.paf HG002.GRCh37.unmapped.fastq input_carnac.txt
 ulimit -s unlimited
 ./CARNAC-LR -f input_carnac.txt -o output_file -t 7
-./scripts/CARNAC_to_fasta HG002.GRCh37.unmapped.fastq output_file 2
+sed 's/@/>@/g' <(awk 'NR%3!=0' <(awk 'NR%4!=0' HG002.GRCh37.unmapped.fastq)) > HG002.GRCh37.unmapped.fasta
+./scripts/CARNAC_to_fasta HG002.GRCh37.unmapped.fasta output_file 2 # NOTE: please use fasta, do not ever use fastq
 
 """
 Running assembly using flye flye/2.8.1
