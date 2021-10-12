@@ -49,3 +49,8 @@ Running assembly using SPAdes/3.14.0
 """
 spades.py -o spades_assembly  -s ../../HG002.GRCh37.unmapped.fastq.gz  --only-assembler
 
+
+"""
+Assemble cluster using flye
+"""
+flye --pacbio-hifi  cluster62.fasta  --out-dir 62
