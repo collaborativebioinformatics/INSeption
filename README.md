@@ -45,6 +45,9 @@ ___
 
 **Our approach to solve the problem**
 =====================================
+
+## data summary
+
 We first start by aligning reads to GRCh37 using minimap2, identifying SVs using Sniffles 1.0.12, we filter out SVs that are supported by less than 10 reads using bcftools 1.12 where we detected 21,248 SVs in (**Figure 3**) we show the distribution of SVs that we identified. Likewise, we plotted the distribution of reads number supporting each type of SVs we detected (**Figure 4**) as well as the allele frequency (**Figure 5**).
 
 ![SV types](/plots/SV_distribution.png)
@@ -52,7 +55,8 @@ We first start by aligning reads to GRCh37 using minimap2, identifying SVs using
 *Figure 3*: Frequency of identified SVs, on the X axis the SV type, on the Y axis the count of identified SVs.
 
 ![SV types](/plots/re_support.png)
-*Figure 4*:
+
+*Figure 4*: Allele frequency distribution across different types of SVs.
 
 ![SV types](/plots/af.png)
 *Figure 5*:
