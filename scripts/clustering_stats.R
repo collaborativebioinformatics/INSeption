@@ -28,20 +28,22 @@ outplot_link  = opt$output_plot
 } else if (params$debug){
   # For easy running in debug mode
   infile_link = "../data/n_fields.txt"
+  infile_link = "../data/clusters_metrics.txt"
+  infile_link = "../data/n_seqs_per_cluster_2.txt"
   output_plot = "../plots/fooplot1.pdf"
 }
 
 
-clusters = read.table(infile_link, sep=' ')
-
-p = ggplot(clusters) + geom_point(aes(x=1:length(V1), y=sort(V1, decreasing=T))) + 
-  geom_line(aes(x=1:length(V1), y=sort(V1, decreasing=T))) + 
+clusters = read.table(infile_link, sep=' ', header=F)
+clusters$size = clusters$V1 / 4
+p = ggplot(clusters) + geom_point(aes(x=1:length(size), y=sort(size, decreasing=F))) + 
+  geom_line(aes(x=1:length(size), y=sort(size, decreasing=F))) + 
   theme_bw() + 
-  scale_y_log10() +
+  scale_y_log10(limits=c(1,max(clusters$size))) +
   labs(x='# Cluster', y='Reads belonging to cluster', 
        title= paste0('CARNAC-LR: Reads and clusters \nSum or reads: ',
-                     sum(clusters),'\nSingletons: ', sum(clusters$V1==1),
-                     ' clusters. >= 2 reads: ', sum(clusters$V1>1), 
+                     sum(clusters$size),'\nSingletons: ', sum(clusters$size==1),
+                     ' clusters. >= 2 reads: ', sum(clusters$size>1), 
                      ' clusters'))
 
 ggsave(p, file=outplot_link, device='pdf', width = params$plotwidth, 

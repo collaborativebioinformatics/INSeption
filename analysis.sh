@@ -25,6 +25,7 @@ Rscript scripts/make_plot_RE_dist.R -i ../HG002.Hifi.GRCh37.table_RE_largeINS.ts
 """
 Make a plot showing the number of reads belonging to a cluster, as obtained by CARNAC-LR
 """
-awk '{print NF}' outputfile > n_fields.txt
+wc -l *.fasta > n_seqs_per_cluster.txt
+sed -E 's/^[ ]*//g' n_seqs_per_cluster.txt > n_seqs_per_cluster_2.txt
 script scripts/clustering_stats.R -i n_fields.txt -o plots/carnac_cluster_stats.pdf
 
