@@ -1,4 +1,4 @@
-name: LROD Manual Docker Workflow
+name: INSeption Manual Docker Workflow
 
 on:
   workflow_dispatch:
@@ -14,9 +14,9 @@ jobs:
     - uses: mr-smithers-excellent/docker-build-push@v5
       name: Build & push Docker image
       with:
-        image: dmolik/lrod
+        image: inseption/inseption
         tags: v1, latest
         registry: docker.io
-        dockerfile: .resources/Dockerfile.luojunwei.LROD
+        dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
