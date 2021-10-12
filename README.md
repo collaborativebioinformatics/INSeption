@@ -24,7 +24,8 @@ ___
 
 Algorithms detect SVs from long-reads data by leveraging intra-read and inter-read signatures. Intra-read signatures enable the direct detection of SVs and are derived from reads spanning entire SV events, resulting in a missing/inserted sequence (deletion) or a soft-clip (insertion) within properly aligned flanking sequences. After signature detection, callers typically cluster and merge similar signatures from multiple reads, delineate proximal but different signatures and choose the highest quality reads that support the putative SV [[3]] **Figure 1**.
 
-![INSeption](/.assets/ins.png)
+![INSeption](/.assets/ins.png)  
+
 *Figure 1*: digram shows the signals of an insertion that SV callers uses, reference shown in green, the sample in blue, and the insertion in orange color. we show three reads in red one covers the whole SV and as a result there is part of the read was not aligned (dotted), other two reads are flanking the SV the unaligned part is shown as dotted line.
 
 
