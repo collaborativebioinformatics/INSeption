@@ -16,13 +16,22 @@ ___
 
 SVs are DNA rearrangements that involve at least 50 nucleotides. By virtue of their size and abundance, SVs represent an important mutational force that shape genome evolution and function, and contribute to germline and somatic diseases. The profound effect of SVs is also attributable to the numerous mechanisms by which they can disrupt protein-coding genes and cis-regulatory architecture. SVs can be grouped into mutational classes that include ‘unbalanced’ gains or losses of DNA (for example, copy-number variants, CNVs), and ‘balanced’ rearrangements that occur without corresponding dosage alterations (such as inversions and translocations). Other common forms of SVs include mobile elements that insert themselves throughout the genome, and multiallelic CNVs (MCNVs) that can exist at high copy numbers. More recently, exotic species of complex SVs have been discovered that involve two or more distinct SV signatures in a single mutational event interleaved on the same allele, and can range from CNV-flanked inversions to rare instances of localized chromosome shattering, such as chromothripsis. The diversity of SVs in humans is therefore far greater than has been widely appreciated, as is their influence on genome structure and function [[2]].
 
+___
 
+**How to detect?**
+==================
+
+Algorithms detect SVs from long-reads data by leveraging intra-read and inter-read signatures. Intra-read signatures enable the direct detection of SVs and are derived from reads spanning entire SV events, resulting in a missing/inserted sequence (deletion) or a soft-clip (insertion) within properly aligned flanking sequences. After signature detection, callers typically cluster and merge similar signatures from multiple reads, delineate proximal but different signatures and choose the highest quality reads that support the putative SV [[3]] **Figure 1**.
+
+![INSeption](/.assets/ins.png)
 
 
 [1]: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1828-7
 [2]: https://www.nature.com/articles/s41586-020-2287-8#citeas
+[3]: https://www.nature.com/articles/s41576-019-0180-9#citeas
 
 References:
 ==========
 1. Mahmoud, M., Gobet, N., Cruz-Dávalos, D.I. et al. Structural variant calling: the long and the short of it. Genome Biol 20, 246 (2019). https://doi.org/10.1186/s13059-019-1828-7
 2. Collins, R.L., Brand, H., Karczewski, K.J. et al. A structural variation reference for medical and population genetics. Nature 581, 444–451 (2020). https://doi.org/10.1038/s41586-020-2287-8
+3. Ho, S.S., Urban, A.E. & Mills, R.E. Structural variation in the sequencing era. Nat Rev Genet 21, 171–189 (2020). https://doi.org/10.1038/s41576-019-0180-9
