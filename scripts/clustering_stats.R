@@ -39,12 +39,13 @@ clusters$size = clusters$V1 / 4
 p = ggplot(clusters) + geom_point(aes(x=1:length(size), y=sort(size, decreasing=F))) + 
   geom_line(aes(x=1:length(size), y=sort(size, decreasing=F))) + 
   theme_bw() + 
-  scale_y_log10(limits=c(1,max(clusters$size))) +
+  scale_y_log10(breaks=c(1,2,10,100,1000),limits=c(1,max(clusters$size))) +
   labs(x='# Cluster', y='Reads belonging to cluster', 
        title= paste0('CARNAC-LR: Reads and clusters \nSum or reads: ',
                      sum(clusters$size),'\nSingletons: ', sum(clusters$size==1),
                      ' clusters. >= 2 reads: ', sum(clusters$size>1), 
-                     ' clusters'))
+                     ' clusters')) + 
+  scale_x_log10(limits=c(1,length(clusters$size)))
 
 ggsave(p, file=outplot_link, device='pdf', width = params$plotwidth, 
        height=params$plotheight, units=params$plotunit)
