@@ -49,9 +49,24 @@ ___
 
 ![INSeption](/.assets/workflow.png)
 
+*Figure 3*:
 
 ![INSeption](/.assets/workflow_ex.png)
 
+*Figure 4*:
+
+
+___
+
+**Installation**
+=================
+
+
+
+___
+
+**How to run**
+==============
 
 
 [1]: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1828-7
