@@ -69,7 +69,7 @@ We started by aligning reads to GRCh37 using minimap2, identified SVs using Snif
 
 
 ## Workflow
-We start by filtering the SVs to include only INS that SV caller could not infer the size and sequence of insertion using bcftools 1.12 (30 SVs were extracted) there distribution across chromome shown in (**Figure 8**) and the read support distribution in (**Figure 9**) , as well we filter the unaligned reads from bam file using samtools 1.9. We folllow two paths for the extracted reads; first, to use assembler directly on the extracted reads and see if is possible that the assembler will segregate them into different contigs. Second, cluster reads based on their similarity using CARNAC-LR then assemble them based on the clusters from previous step, later align the clipped reads from the SV file to the newly assembled contigs and lastly update the vcf file (**Figure 6 and 7**).
+We start by filtering the SVs to include only INS that SV caller could not infer the size and sequence of insertion using bcftools 1.12 (30 SVs were extracted) there distribution across chromosome shown in (**Figure 8**) and the read support distribution in (**Figure 9**) , as well we filter the unaligned reads from bam file using samtools 1.9. We follow two paths for the extracted reads; first, to use assembler directly on the extracted reads and see if is possible that the assembler will segregate them into different contigs. Second, cluster reads based on their similarity using CARNAC-LR (cluster distribution avilable in Figure 9) then assemble them based on the clusters from previous step, later align the clipped reads from the SV file to the newly assembled contigs and lastly update the vcf file (**Figure 6 and 7**).
 
 ![INSeption](/.assets/workflow.png)
 
@@ -88,6 +88,10 @@ We start by filtering the SVs to include only INS that SV caller could not infer
 ![Large INS RE distribution](/plots/re_long_ins.png)
 
 *Figure 8*: Distribution of reads supporting large insertions.
+
+![Large INS RE distribution](/plots/cluster_distribution.png)
+
+*Figure 9*: Distribution of reads in clusters.
 
 ___
 
