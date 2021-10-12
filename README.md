@@ -76,7 +76,7 @@ We start by filtering the SVs to include only INS that SV caller could not infer
 *Figure 6*: INSeption workflow.
 
 
-![INSeption](/.assets/workflow_ex.png)
+![INSeption](/plots/workflow_ex.png)
 
 *Figure 7*: Example of the workflow showing two insertions (A) and (B) we extract the unaligned reads (C) cluster them into groups (D) assemble each cluster (E) and finally align clipped reads to the assembled cluster (F).
 
