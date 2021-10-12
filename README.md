@@ -22,5 +22,7 @@ SVs are DNA rearrangements that involve at least 50 nucleotides. By virtue of th
 
 References:
 ==========
+1. Mahmoud, M., Gobet, N., Cruz-Dávalos, D.I. et al. Structural variant calling: the long and the short of it. Genome Biol 20, 246 (2019). https://doi.org/10.1186/s13059-019-1828-7
+2. Collins, R.L., Brand, H., Karczewski, K.J. et al. A structural variation reference for medical and population genetics. Nature 581, 444–451 (2020). https://doi.org/10.1038/s41586-020-2287-8
 [1]: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1828-7
 [2]: https://www.nature.com/articles/s41586-020-2287-8#citeas
