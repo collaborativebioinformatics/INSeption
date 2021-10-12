@@ -41,6 +41,19 @@ For an insertion (INS), if the read length used to detect the INS is larger than
 *Figure 2*: A digram shows reads that signals an insetion but no reads are long enough to span the entire event. we show four reads in red two dotted reads full in the insertion, other two reads are flanking the SV the unaligned part is shown as dotted line.
 
 
+___
+
+**Our approach to solve the problem**
+=====================================
+
+
+![INSeption](/.assets/workflow.png)
+
+
+![INSeption](/.assets/workflow_ex.png)
+
+
+
 [1]: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1828-7
 [2]: https://www.nature.com/articles/s41586-020-2287-8#citeas
 [3]: https://www.nature.com/articles/s41576-019-0180-9#citeas
