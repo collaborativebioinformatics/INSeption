@@ -52,19 +52,19 @@ We started by aligning reads to GRCh37 using minimap2, identified SVs using Snif
 
 ![SV types](/plots/SV_distribution.png)
 
-*Figure 3*: Frequency of identified SVs, on the X axis the SV type, on the Y axis the count of identified SVs.
+*Figure 3*: Frequency of identified SVs, on the X axis the SV type, on the Y axis the count of identified SVs.  
 
 
 
 ![SV types](/plots/re_support.png)
 
-*Figure 4*: distribution of reads count supporting each SV type.
+*Figure 4*: distribution of reads count supporting each SV type.  
 
 
 
 ![SV types](/plots/af.png)
 
-*Figure 5*:Allele frequency distribution across different types of SVs.
+*Figure 5*:Allele frequency distribution across different types of SVs.  
 
 
 
