@@ -48,7 +48,7 @@ ___
 We first start by aligning reads to GRCh37 using minimap2, identifying SVs using Sniffles 1.0.12, we filter out SVs tahat are supported by less than 10 reads using bcftools 1.12.
 
 
-![SV types](./plots/SV_type_task4.pdf)
+![SV types](./plots/SV_type_task4.pdf "tag")
 
 ![INSeption](/.assets/workflow.png)
 
