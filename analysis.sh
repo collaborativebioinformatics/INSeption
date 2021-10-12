@@ -54,3 +54,11 @@ spades.py -o spades_assembly  -s ../../HG002.GRCh37.unmapped.fastq.gz  --only-
 Assemble cluster using flye
 """
 flye --pacbio-hifi  cluster62.fasta  --out-dir 62
+
+
+"""
+Get reade name for each SV (INS) and write it out in a file carrying the INS id
+"""
+bcftools query -f '%ID\t%INFO/RNAMES\n' HG002.HiFi.GRCh37.SVLEN50.RE10.largeINS.vcf |  while read a b ; do c=$(echo $b | tr ',' '\n'); echo $c > "${a}".txt ; done
+
+
