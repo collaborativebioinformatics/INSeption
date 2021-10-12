@@ -27,14 +27,18 @@ Algorithms detect SVs from long-reads data by leveraging intra-read and inter-re
 
 ![INSeption](/.assets/ins.png)  
 
-*Figure 1*: digram shows the signals of an insertion that SV callers uses, reference shown in green, the sample in blue, and the insertion in orange color. we show three reads in red one covers the whole SV and as a result there is part of the read was not aligned (dotted), other two reads are flanking the SV the unaligned part is shown as dotted line.
+*Figure 1*: A digram shows the signals of an insertion that SV callers uses, reference shown in green, the sample in blue, and the insertion in orange color. we show three reads in red one covers the whole SV and as a result there is part of the read was not aligned (dotted), other two reads are flanking the SV the unaligned part is shown as dotted line.
 
 ___
 
 **The problem**
 ===============
 
-For an insertion (INS), if the read length used to detect the INS is larger than the insertion; then the SV caller will infer the inserted sequence from it, but this does not happen all the time, some insertions are large that there is no read can span the whole insertions. Consecutively, the SV caller will identify the insertion location on reference but will not inform the sequence of that specific insertions **Figure 2**.   
+For an insertion (INS), if the read length used to detect the INS is larger than the insertion; then the SV caller will infer the inserted sequence from it, but this does not happen all the time, some insertions are large that there is no read can span the whole insertions. Consecutively, the SV caller will identify the insertion location on reference but will not inform the sequence of that specific insertions **Figure 2**.  
+
+![INSeption](/.assets/ins2.png)
+
+*Figure 2*: A digram shows reads that signals an insetion but no reads are long enough to span the entire event. we show four reads in red two dotted reads full in the insertion, other two reads are flanking the SV the unaligned part is shown as dotted line.
 
 
 [1]: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1828-7
