@@ -45,7 +45,7 @@ p = ggplot(clusters) + geom_point(aes(x=1:length(size), y=sort(size, decreasing=
                      sum(clusters$size),'\nSingletons: ', sum(clusters$size==1),
                      ' clusters. >= 2 reads: ', sum(clusters$size>1), 
                      ' clusters')) + 
-  scale_x_log10(limits=c(1,length(clusters$size)))
+  scale_x_continuous(limits=c(1,length(clusters$size)))
 
 ggsave(p, file=outplot_link, device='pdf', width = params$plotwidth, 
        height=params$plotheight, units=params$plotunit)
