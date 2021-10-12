@@ -22,11 +22,19 @@ ___
 **How to detect?**
 ==================
 
-Algorithms detect SVs from long-reads data by leveraging intra-read and inter-read signatures. Intra-read signatures enable the direct detection of SVs and are derived from reads spanning entire SV events, resulting in a missing/inserted sequence (deletion) or a soft-clip (insertion) within properly aligned flanking sequences. After signature detection, callers typically cluster and merge similar signatures from multiple reads, delineate proximal but different signatures and choose the highest quality reads that support the putative SV [[3]] **Figure 1**.
+Algorithms detect SVs from long-reads data by leveraging intra-read and inter-read signatures. Intra-read signatures enable the direct detection of SVs and are derived from reads spanning entire SV events, resulting in a missing/inserted sequence (deletion) or a soft-clip (insertion) within properly aligned flanking sequences. After signature detection, callers typically cluster and merge similar signatures from multiple reads, delineate proximal but different signatures and choose the highest quality reads that support the putative SV [[3]] **Figure 1**.  
+
 
 ![INSeption](/.assets/ins.png)  
 
 *Figure 1*: digram shows the signals of an insertion that SV callers uses, reference shown in green, the sample in blue, and the insertion in orange color. we show three reads in red one covers the whole SV and as a result there is part of the read was not aligned (dotted), other two reads are flanking the SV the unaligned part is shown as dotted line.
+
+___
+
+**The problem**
+===============
+
+For an insertion (INS), if the read length used to detect the INS is larger than the insertion; then the SV caller will infer the inserted sequence from it, but this does not happen all the time, some insertions are large that there is no read can span the whole insertions. Consecutively, the SV caller will identify the insertion location on reference but will not inform the sequence of that specific insertions **Figure 2**.   
 
 
 [1]: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1828-7
