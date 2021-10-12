@@ -29,3 +29,22 @@ wc -l *.fasta > n_seqs_per_cluster.txt
 sed -E 's/^[ ]*//g' n_seqs_per_cluster.txt > n_seqs_per_cluster_2.txt
 script scripts/clustering_stats.R -i n_fields.txt -o plots/carnac_cluster_stats.pdf
 
+"""
+Clustering unmapped reads with CARNAC-LR
+"""
+minimap2 HG002.GRCh37.unmapped.fastq HG002.GRCh37.unmapped.fastq -X > minimap_output.paf
+python3 CARNAC-LR/scripts/paf_to_CARNAC.py minimap_output.paf HG002.GRCh37.unmapped.fastq input_carnac.txt
+ulimit -s unlimited
+./CARNAC-LR -f input_carnac.txt -o output_file -t 7
+./scripts/CARNAC_to_fasta HG002.GRCh37.unmapped.fastq output_file 2
+
+"""
+Running assembly using flye flye/2.8.1
+"""
+flye --pacbio-hifi HG002.GRCh37.unmapped.fastq.gz  --out-dir assembly --threads 32
+
+"""
+Running assembly using SPAdes/3.14.0
+"""
+spades.py -o spades_assembly  -s ../../HG002.GRCh37.unmapped.fastq.gz  --only-assembler
+
