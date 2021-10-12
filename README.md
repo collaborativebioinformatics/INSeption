@@ -49,9 +49,9 @@ We first start by aligning reads to GRCh37 using minimap2, identifying SVs using
 
 
 
-<embed src="/plots/SV_type_task4.pdf" type="application/pdf">
 
-![SV types](/plots/SV_type_task4.pdf "tag")
+
+![SV types](/plots/SV_distribution.png)
 
 ![INSeption](/.assets/workflow.png)
 
