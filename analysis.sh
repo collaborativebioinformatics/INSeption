@@ -86,9 +86,9 @@ Merge ins supporting reads, also as input to minimap
 cat fasta_support_ins/*.fasta > fasta_support_ins/all.fasta
 
 """
-Run minimap2: align all reads supporting ins against the contigs. 
+Run minimap2: align all reads supporting ins against the contigs. '-P' parameter to retain all alignments, even secondary ones. 
 """
-minimap2 -x map-hifi spades_contigs_fasta/spades_pseudoreference.fasta fasta_support_ins/all.fasta -a > ins_reads_vs_contigs.sam
+minimap2 -x map-hifi spades_contigs_fasta/spades_pseudoreference.fasta fasta_support_ins/all.fasta -a -P > ins_reads_vs_contigs.sam
 samtools sort -O sam -o ins_reads_vs_contigs.sort.sam ins_reads_vs_contigs.sam
 
 
