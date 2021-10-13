@@ -72,3 +72,25 @@ Run spades (much faster than flye) on every cluster.fasta
 """
 python3 scripts/clusterAssembler_general.py multi spades spades.py fastas_to_assemble/ assemblies/
 
+"""
+Get the contigs.fasta from all successful runs, collect them in one directory. 
+Then concatenate them to use as a pseudoreference for minimap2 in a later step.
+"""
+bash scripts/collect_assembly_fastas.sh assemblies spades_contigs_fasta
+cat spades_contigs_fasta/*.fasta > spades_contigs_fasta/spades_pseudoreference.fasta
+samtools faidx spades_contigs_fasta/spades_pseudoreference.fasta
+
+"""
+Merge ins supporting reads, also as input to minimap
+"""
+cat fasta_support_ins/*.fasta > fasta_support_ins/all.fasta
+
+"""
+Run minimap2: align all reads supporting ins against the contigs. 
+"""
+minimap2 -x map-hifi spades_contigs_fasta/spades_pseudoreference.fasta fasta_support_ins/all.fasta -a > ins_reads_vs_contigs.sam
+samtools sort -O sam -o ins_reads_vs_contigs.sort.sam ins_reads_vs_contigs.sam
+
+
+
+
