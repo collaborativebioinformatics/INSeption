@@ -98,13 +98,31 @@ ___
 **Installation**
 =================
 
+In Singularity:
+```
+singularity pull docker://inseption/inseption
+```
 
+In Docker:
+```
+docker pull inseption/inseption
 
-___
+```
+
 
 **How to run**
 ==============
 
+In Singularity:
+```
+singularity run inseption.sif INSeption.sh -b <input.bam> -v <input.vcf>
+```
+
+In Docker:
+```
+docker run -d --name inseptions -it inseption
+docker exec -it inseptions INSeption.sh -b <input.bam> -v <input.vcf>
+```
 
 [1]: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1828-7
 [2]: https://www.nature.com/articles/s41586-020-2287-8#citeas
