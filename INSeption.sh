@@ -54,8 +54,12 @@ help(){
     -v or --version
        display otb version and exit
 
-    -s or --supress
-       supress stop and checks, less verbose
+   inputs
+    -b or --bam
+       bam file which contains mapped reads with unaligned portions over insertions
+
+    -v or --vcf 
+       vcf file with insertions
   "
   exit 0;
 }
@@ -73,7 +77,6 @@ while [ $# -gt 0 ] ; do
   case $1 in
     -H | --help) help ;;
     -V | --version) version ;;
-    -s | --supress) SUPRESS="true";;
     -b | --bam) BAM="$2";;
     -v | --vcf) VCF="$2";;
   esac
@@ -90,23 +93,18 @@ unresolved_ins=$( echo $VCF | sed 's/\.vcf$/\.unresolved\.vcf/' )
 bcftools view -i 'INFO/SVTYPE="INS" & INFO/SVLEN=999' $VCF > $unresolved_ins
 
 state "Extracting RE and SVTYPE, makeing plots for RE, SV type and INS-RE"
-re_svtype_ins=$( echo $VCF | sed 's/\.vcf$/\.re_svtype\.tsv/' )
+re_svtype_ins=$( echo $VCF | sed 's/\.vcf$/\.re\.sv\.tsv/' )
 bcftools query -f "%INFO/RE\t%INFO/SVTYPE\n" $VCF > $re_svtype_ins
 Rscript scripts/make_plots_RE_and_SVTYPE.R -i $re_svtype_ins -p plots/RE_dist.pdf -q plots/SV_type.pdf -r plots/INS_RE_dist.pdf
 
+state "Extracting RE of long INS, make plots for RE"
+unresolved_re_ins=$( echo $VCF | sed 's/\.vcf$/\.re\.sv\.unresolved\.tsv/' )
+bcftool query -f "%INFO/RE\n" $unresolved_ins > $unresolved_re_ins
+Rscript scripts/make_plot_RE_dist.R -i $unresolved_re_ins -o plots/longIns_RE.pdf
 
 
-# TODO: 
-# Extract RE of long INS, make plots for RE (task 7)
-bcftool query -f "%INFO/RE\n" HG002.HiFi.GRCh37.SVLEN50.RE10.largeINS.vcf > HG002.Hifi.GRCh37.table_RE_largeINS.tsv
-Rscript scripts/make_plot_RE_dist.R -i ../HG002.Hifi.GRCh37.table_RE_largeINS.tsv -o plots/longIns_RE.pdf
-
-# Make a plot showing the number of reads belonging to a cluster, as obtained by CARNAC-LR
-wc -l *.fasta > n_seqs_per_cluster.txt
-sed -E 's/^[ ]*//g' n_seqs_per_cluster.txt > n_seqs_per_cluster_2.txt
-script scripts/clustering_stats.R -i n_fields.txt -o plots/carnac_cluster_stats.pdf
-
-# Clustering unmapped reads with CARNAC-LR
+# TODO ##########################################
+state "Clustering unmapped reads with CARNAC-LR"
 minimap2 HG002.GRCh37.unmapped.fastq HG002.GRCh37.unmapped.fastq -X > minimap_output.paf
 python3 CARNAC-LR/scripts/paf_to_CARNAC.py minimap_output.paf HG002.GRCh37.unmapped.fastq input_carnac.txt
 ulimit -s unlimited
@@ -114,35 +112,38 @@ ulimit -s unlimited
 sed 's/@/>@/g' <(awk 'NR%3!=0' <(awk 'NR%4!=0' HG002.GRCh37.unmapped.fastq)) > HG002.GRCh37.unmapped.fasta
 ./scripts/CARNAC_to_fasta HG002.GRCh37.unmapped.fasta output_file 2 # NOTE: please use fasta, do not ever use fastq
 
-# Running assembly using flye flye/2.8.1
-flye --pacbio-hifi HG002.GRCh37.unmapped.fastq.gz  --out-dir assembly --threads 32
+state "Making a plot showing the number of reads belonging to a cluster, as obtained by CARNAC-LR"
+wc -l *.fasta > n_seqs_per_cluster.txt
+sed -E 's/^[ ]*//g' n_seqs_per_cluster.txt > n_seqs_per_cluster_2.txt
+script scripts/clustering_stats.R -i n_fields.txt -o plots/carnac_cluster_stats.pdf
+#################################################
 
-# Running assembly using SPAdes/3.14.0
-spades.py -o spades_assembly  -s ../../HG002.GRCh37.unmapped.fastq.gz  --only-assembler
+state "Running assembly using SPAdes"
+spades.py -o spades_assembly  -s $unaligned_reads_file  --only-assembler
 
+# TODO ##########################################
 
-# Assemble cluster using flye
-flye --pacbio-hifi  cluster62.fasta  --out-dir 62
+# This doesn't look right
+state "Getting read names for each SV (INS) and write it out in a file carrying the INS id"
+bcftools query -f '%ID\t%INFO/RNAMES\n' $unresolved_ins |  while read a b ; do c=$(echo $b | tr ',' '\n'); echo $c > ./read_name_per_sv/"${a}".txt; done
 
-# Get reade name for each SV (INS) and write it out in a file carrying the INS id
-bcftools query -f '%ID\t%INFO/RNAMES\n' HG002.HiFi.GRCh37.SVLEN50.RE10.largeINS.vcf |  while read a b ; do c=$(echo $b | tr ',' '\n'); echo $c > ./read_name_per_sv/"${a}".txt ; done
+state "Extracting reads from BAM file"
+for file in $(ls $PWD/read_name_per_sv/*.txt); do cluter_name=$(basename $file; cluster=$(echo $cluster_name | cut -d'.' -f 1); samtools view $BAM | grep -f $file | cut -f 1,10 | awk '!/*/ {print ">"$1"\n"$2}' > "${cluster}".fasta; done
 
-# Extract reads from BAM file
-for i in $(ls $PWD/read_name_per_sv/*.txt); do a=$(basename $i); c=$(echo $a | cut -d'.' -f 1); samtools view my.bam | grep -f $i | cut -f 1,10 | awk '!/*/ {print ">"$1"\n"$2}' > "${c}".fasta
-
-
-# Run spades (much faster than flye) on every cluster.fasta
+state "Running spades on every cluster.fasta"
 python3 scripts/clusterAssembler_general.py multi spades spades.py fastas_to_assemble/ assemblies/
 
-# Get the contigs.fasta from all successful runs, collect them in one directory. 
-# Then concatenate them to use as a pseudoreference for minimap2 in a later step.
+state "Getting the contigs.fasta from all successful runs, collect them in one directory." 
 bash scripts/collect_assembly_fastas.sh assemblies spades_contigs_fasta
+
+state "Concatenating contigs to use as a pseudoreference for minimap2 in a later step."
 cat spades_contigs_fasta/*.fasta > spades_contigs_fasta/spades_pseudoreference.fasta
 samtools faidx spades_contigs_fasta/spades_pseudoreference.fasta
 
-# Merge ins supporting reads, also as input to minimap
+state "Merging ins supporting reads, input to minimap"
 cat fasta_support_ins/*.fasta > fasta_support_ins/all.fasta
 
-# Run minimap2: align all reads supporting ins against the contigs. '-P' parameter to retain all alignments, even secondary ones. 
+state "Running minimap2: aligning all reads supporting ins against the contigs. using '-P' parameter to retain all alignments, even secondary ones." 
 minimap2 -x map-hifi spades_contigs_fasta/spades_pseudoreference.fasta fasta_support_ins/all.fasta -a -P > ins_reads_vs_contigs.sam
 samtools sort -O sam -o ins_reads_vs_contigs.sort.sam ins_reads_vs_contigs.sam
+#################################################
