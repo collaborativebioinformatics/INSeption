@@ -85,8 +85,8 @@ done
 
 
 state "Extracting unaligned reads from bam file."
-unaligned_reads_file=$( echo $BAM | sed 's/\.bam$/\.fastq\.gz/' )
-samtools view -f 4 $BAM | samtools fastq -@ 5  | bgzip > $unaligned_reads_file
+unaligned_reads_file=$( echo $BAM | sed 's/\.bam$/\.fastq/' )
+samtools view -f 4 $BAM | samtools fastq -@ 5  > $unaligned_reads_file
 
 state "Extracting INS that can't be resolved by Sniffles"
 unresolved_ins=$( echo $VCF | sed 's/\.vcf$/\.unresolved\.vcf/' )
@@ -105,12 +105,13 @@ Rscript scripts/make_plot_RE_dist.R -i $unresolved_re_ins -o plots/longIns_RE.pd
 
 # TODO ##########################################
 state "Clustering unmapped reads with CARNAC-LR"
-minimap2 HG002.GRCh37.unmapped.fastq HG002.GRCh37.unmapped.fastq -X > minimap_output.paf
-python3 CARNAC-LR/scripts/paf_to_CARNAC.py minimap_output.paf HG002.GRCh37.unmapped.fastq input_carnac.txt
+unaligned_reads_file_fasta=$( echo $BAM | sed 's/\.bam$/\.fasta/' )
+minimap2 $unaligned_reads_file $unaligned_reads_file -X > minimap_output.paf
+python3 CARNAC-LR/scripts/paf_to_CARNAC.py minimap_output.paf $unaligned_reads_file input_carnac.txt
 ulimit -s unlimited
 ./CARNAC-LR -f input_carnac.txt -o output_file -t 7
-sed 's/@/>@/g' <(awk 'NR%3!=0' <(awk 'NR%4!=0' HG002.GRCh37.unmapped.fastq)) > HG002.GRCh37.unmapped.fasta
-./scripts/CARNAC_to_fasta HG002.GRCh37.unmapped.fasta output_file 2 # NOTE: please use fasta, do not ever use fastq
+sed 's/@/>@/g' <(awk 'NR%3!=0' <(awk 'NR%4!=0' $unaligned_reads_file)) > $unaligned_reads_file_fasta
+./scripts/CARNAC_to_fasta $unaligned_reads_file_fasta output_file 2 # NOTE: please use fasta, do not ever use fastq
 
 state "Making a plot showing the number of reads belonging to a cluster, as obtained by CARNAC-LR"
 wc -l *.fasta > n_seqs_per_cluster.txt
