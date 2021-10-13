@@ -15,7 +15,6 @@ ENV R_LIBS_USER=/usr/local/lib/R
 
 RUN mkdir -p ~/R_libs/
 
-
 # MAIN
 #Install base things
 RUN apk add --no-cache --upgrade bash curl libressl-dev curl-dev libxml2-dev gcc g++ git coreutils ncurses linux-headers libgit2-dev libbz2 gfortran
@@ -36,7 +35,7 @@ RUN  R -e "install.packages('devtools',dependencies=TRUE, repos='http://cran.rst
   && R -e "install.packages('optparse',dependencies=TRUE, repos='http://cran.rstudio.com/')"
 
 #Install Aplications
-RUN apk add build-base boost musl-dev make cmake zlib zlib-dev ncurses-dev boost-dev libpng
+RUN apk add build-base boost musl-dev make cmake zlib zlib-dev ncurses-dev boost-dev libpng libexecinfo-dev
 
 #samtools
 RUN wget https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2 \
@@ -58,6 +57,7 @@ RUN wget https://github.com/samtools/bcftools/releases/download/1.12/bcftools-1.
   && make install \
   && cd ..
 
+#scripts dependencies 
 ENV PYTHONUNBUFFERED=1
 RUN apk add --update --no-cache python3 python3-dev && ln -sf python3 /usr/bin/python \
   && python3 -m ensurepip \
@@ -72,7 +72,27 @@ RUN wget http://cab.spbu.ru/files/release3.12.0/SPAdes-3.12.0-Linux.tar.gz \
   && tar -xzf SPAdes-3.12.0-Linux.tar.gz \
   && cd SPAdes-3.12.0-Linux/bin/
 
-# flye
-#RUN git clone https://github.com/fenderglass/Flye \
-#  && cd Flye \
-#  && make
+# minimap2
+RUN wget https://github.com/lh3/minimap2/archive/refs/heads/master.zip \
+  && unzip master.zip \
+  && cd minimap2-master \
+  && make \ 
+  && cp minimap2 /usr/local/bin \
+  && cd .. \
+  && rm master.zip
+
+# If you are trying to build this Container from scratch without the INSeption repo, use the following
+#RUN mkdir scripts \
+#  && cd scripts \
+#  && wget https://raw.githubusercontent.com/collaborativebioinformatics/INSeption/main/INSeption.sh \
+#  && wget https://raw.githubusercontent.com/collaborativebioinformatics/INSeption/main/scripts/SVStat.py \
+#  && wget https://raw.githubusercontent.com/collaborativebioinformatics/INSeption/main/scripts/clusterAssembler.py \
+#  && wget https://raw.githubusercontent.com/collaborativebioinformatics/INSeption/main/scripts/clusterAssembler_general.py \
+#  && wget https://raw.githubusercontent.com/collaborativebioinformatics/INSeption/main/scripts/clustering_stats.R \
+#  && wget https://raw.githubusercontent.com/collaborativebioinformatics/INSeption/main/scripts/collect_assembly_fastas.sh \
+#  && wget https://raw.githubusercontent.com/collaborativebioinformatics/INSeption/main/scripts/make_plot_RE_dist.R \
+#  && wget https://raw.githubusercontent.com/collaborativebioinformatics/INSeption/main/scripts/make_plots_RE_and_SVTYPE.R \
+#  && cd ..
+
+# Else, put INSeption.sh in usr local bin
+RUN mv INSeption.sh /usr/local/bin
