@@ -59,6 +59,9 @@ flye --pacbio-hifi  cluster62.fasta  --out-dir 62
 """
 Get reade name for each SV (INS) and write it out in a file carrying the INS id
 """
-bcftools query -f '%ID\t%INFO/RNAMES\n' HG002.HiFi.GRCh37.SVLEN50.RE10.largeINS.vcf |  while read a b ; do c=$(echo $b | tr ',' '\n'); echo $c > "${a}".txt ; done
+bcftools query -f '%ID\t%INFO/RNAMES\n' HG002.HiFi.GRCh37.SVLEN50.RE10.largeINS.vcf |  while read a b ; do c=$(echo $b | tr ',' '\n'); echo $c > ./read_name_per_sv/"${a}".txt ; done
 
-
+"""
+Extract reads from BAM file
+"""
+for i in $(ls $PWD/read_name_per_sv/*.txt); do a=$(basename $i); c=$(echo $a | cut -d'.' -f 1); samtools view my.bam | grep -f $i | cut -f 1,10 | awk '!/*/ {print ">"$1"\n"$2}' > "${c}".fasta
