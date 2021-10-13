@@ -42,13 +42,17 @@ class ClusterAssembler:
        i = x.find("cluster")
        j = x[i + 7:].find(".")
        assemblerOutputPath = os.path.join(outputDir, str(x[i + 7:i + 7 + j]))
+       
+       if os.path.exists(assemblerOutputPath):
+           print('{}: Path exists. Will not attempt to overwrite'.format(assemblerOutputPath))
+           return(None)
 
        if assemblerName == 'flye':
            cmd = assemblerPath + " --pacbio-hifi " + x + " --out-dir "+assemblerOutputPath
        elif assemblerName == 'spades':
            cmd = assemblerPath + " --only-assembler -s " + x + " -o "+assemblerOutputPath
        else:
-           print('Unknown assembler. Exiting')
+           print('{}: Unknown assembler. Exiting'.format(assemblerName))
            sys.exit()
 
        cls.__runCOMMAND(cls,cmd)
