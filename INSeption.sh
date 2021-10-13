@@ -71,26 +71,32 @@ version(){
 
 while [ $# -gt 0 ] ; do
   case $1 in
-    -h | --help) help ;;
-    -v | --version) version ;;
+    -H | --help) help ;;
+    -V | --version) version ;;
     -s | --supress) SUPRESS="true";;
+    -b | --bam) BAM="$2";;
+    -v | --vcf) VCF="$2";;
   esac
   shift
 done
 
 
-#  Extract unaligned reads from bam file.
-samtools view -f 4 my.bam | samtools fastq -@ 5  | bgzip > HG002.GRCh37.unmapped.fastq.gz
+state "Extracting unaligned reads from bam file."
+unaligned_reads_file=$( echo $BAM | sed 's/\.bam$/\.fastq\.gz/' )
+samtools view -f 4 $BAM | samtools fastq -@ 5  | bgzip > $unaligned_reads_file
+
+state "Extracting INS that can't be resolved by Sniffles"
+unresolved_ins=$( echo $VCF | sed 's/\.vcf$/\.unresolved\.vcf/' )
+bcftools view -i 'INFO/SVTYPE="INS" & INFO/SVLEN=999' $VCF > $unresolved_ins
+
+state "Extracting RE and SVTYPE, makeing plots for RE, SV type and INS-RE"
+re_svtype_ins=$( echo $VCF | sed 's/\.vcf$/\.re_svtype\.tsv/' )
+bcftools query -f "%INFO/RE\t%INFO/SVTYPE\n" $VCF > $re_svtype_ins
+Rscript scripts/make_plots_RE_and_SVTYPE.R -i $re_svtype_ins -p plots/RE_dist.pdf -q plots/SV_type.pdf -r plots/INS_RE_dist.pdf
 
 
-# Extract INS that can't be resolved by Sniffles 1.0.12.
-bcftools view -i 'INFO/SVTYPE="INS" & INFO/SVLEN=999' HG002.HiFi.GRCh37.SVLEN50.RE10.vcf > HG002.HiFi.GRCh37.SVLEN50.RE10.largeINS.vcf
 
-
-# Extract RE and SVTYPE, make plots for RE (task 2), SV type (task 4) and INS-RE (task 5)
-bcftools query -f "%INFO/RE\t%INFO/SVTYPE\n" HG002.HiFi.GRCh37.SVLEN50.RE10.vcf > HG002.Hifi.GRCh37.table_RE_SVTYPE.tsv
-Rscript scripts/make_plots_RE_and_SVTYPE.R -i HG002.Hifi.GRCh37.table_RE_SVTYPE.tsv -p plots/RE_dist_task2.pdf -q plots/SV_type_task4.pdf -r plots/INS_RE_dist_task5.pdf
-
+# TODO: 
 # Extract RE of long INS, make plots for RE (task 7)
 bcftool query -f "%INFO/RE\n" HG002.HiFi.GRCh37.SVLEN50.RE10.largeINS.vcf > HG002.Hifi.GRCh37.table_RE_largeINS.tsv
 Rscript scripts/make_plot_RE_dist.R -i ../HG002.Hifi.GRCh37.table_RE_largeINS.tsv -o plots/longIns_RE.pdf
