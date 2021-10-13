@@ -59,7 +59,7 @@ RUN wget https://github.com/samtools/bcftools/releases/download/1.12/bcftools-1.
   && cd ..
 
 ENV PYTHONUNBUFFERED=1
-RUN apk add --update --no-cache python3 python-dev python3-dev && ln -sf python3 /usr/bin/python \
+RUN apk add --update --no-cache python3 python3-dev && ln -sf python3 /usr/bin/python \
   && python3 -m ensurepip \
   && pip3 install --no-cache --upgrade pip setuptools
 RUN pip install pkgconfig numpy
