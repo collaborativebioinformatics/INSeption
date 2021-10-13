@@ -73,6 +73,6 @@ RUN wget http://cab.spbu.ru/files/release3.12.0/SPAdes-3.12.0-Linux.tar.gz \
   && cd SPAdes-3.12.0-Linux/bin/
 
 # flye
-RUN git clone https://github.com/fenderglass/Flye \
-  && cd Flye \
-  && make
+#RUN git clone https://github.com/fenderglass/Flye \
+#  && cd Flye \
+#  && make
