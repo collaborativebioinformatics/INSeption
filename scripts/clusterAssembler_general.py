@@ -42,8 +42,7 @@ class ClusterAssembler:
        i = x.find("cluster")
        j = x[i + 7:].find(".")
        assemblerOutputPath = os.path.join(outputDir, str(x[i + 7:i + 7 + j]))
-       import pdb
-       pdb.set_trace()
+
        if assemblerName == 'flye':
            cmd = assemblerPath + " --pacbio-hifi " + x + " --out-dir "+assemblerOutputPath
        elif assemblerName == 'spades':
