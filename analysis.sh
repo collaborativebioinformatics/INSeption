@@ -65,3 +65,10 @@ bcftools query -f '%ID\t%INFO/RNAMES\n' HG002.HiFi.GRCh37.SVLEN50.RE10.largeINS.
 Extract reads from BAM file
 """
 for i in $(ls $PWD/read_name_per_sv/*.txt); do a=$(basename $i); c=$(echo $a | cut -d'.' -f 1); samtools view my.bam | grep -f $i | cut -f 1,10 | awk '!/*/ {print ">"$1"\n"$2}' > "${c}".fasta
+
+
+"""
+Run spades (much faster than flye) on every cluster.fasta
+"""
+python3 scripts/clusterAssembler_general.py multi spades spades.py fastas_to_assemble/ assemblies/
+
